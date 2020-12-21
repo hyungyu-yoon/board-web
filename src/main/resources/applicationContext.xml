@@ -14,8 +14,17 @@
         5. destroy-method - 객체를 삭제하기 직전에 호출되는 메서드
         6. lazy-init - 지연 로딩 방식으로 객체 생성 메모리 효율적 관리 true, false
         7. scope - 객체 생성의 제어 default는 singleton
+        9. <constructor-arg> 엘리먼트 - 생성자 인자로 전달할 객체의 아이디를 ref 속성으로 참조
+          * 다중 변수 매핑 시 여러 개 설정 가능
+          * index 속성 - 어떤 값이 몇 번째 인지 지정
     -->
-    <bean id="tv" class="polymorphism.SamsungTV" init-method="initMethod" destroy-method="destroyMethod" lazy-init="true" scope="singleton"/>
+    <bean id="tv" class="polymorphism.SamsungTV" init-method="initMethod" destroy-method="destroyMethod" lazy-init="true" scope="singleton">
+        <constructor-arg index="0" ref="apple"></constructor-arg>
+        <constructor-arg index="1" value="2700000"></constructor-arg>
+    </bean>
+
+    <bean id="sony" class="polymorphism.SonySpeaker"></bean>
+    <bean id="apple" class="polymorphism.AppleSpeaker"></bean>
 
     <!-- 스프링 설정 파일을 여러 파일로 나누어 처리 하기 위해 기능 별로 나누고 import를 하여 사용한다.  -->
     <!--    <import resource="context-datasource.xml"></import>-->
