@@ -5,7 +5,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 
 public class TVUser {
     public static void main(String[] args) {
-        // 1. Spring 컨테이너를 구동한다
+        // 1. Spring 컨테이너를 구동한다. resources의 application.xml을 읽는다.
         AbstractApplicationContext factory =
                 new GenericXmlApplicationContext("applicationContext.xml");
 

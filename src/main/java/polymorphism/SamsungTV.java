@@ -19,4 +19,12 @@ public class SamsungTV implements TV {
     public void volumeDown() {
         System.out.println("SamsungTV---소리 내린다.");
     }
+
+    private void initMethod() {
+        System.out.println("객체 초기화 작업 처리..");
+    }
+
+    private void destroyMethod() {
+        System.out.println("객체 삭제 전에 처리할 로직 처리....");
+    }
 }
