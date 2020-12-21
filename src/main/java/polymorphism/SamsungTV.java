@@ -10,13 +10,27 @@ public class SamsungTV implements TV {
 
     /**
      * 의존성 주입
+     * Setter 인젝션
+     */
+    public void setSpeaker(Speaker speaker) {
+        this.speaker = speaker;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    /**
+     * 의존성 주입
      * 생성자 인젝션(Constructor Injection)
      */
-    public SamsungTV(Speaker speaker, int price) {
-        System.out.println("===> SamsungTV(2) 객체 생성");
-        this.speaker = speaker;
-        this.price = price; // 다중 변수 매핑
-    }
+//    public SamsungTV(Speaker speaker, int price) {
+//        System.out.println("===> SamsungTV(2) 객체 생성");
+//        this.speaker = speaker;
+//        this.price = price; // 다중 변수 매핑
+//    }
+
+
 
     public void powerOn() {
         System.out.println("SamsungTV---전원 켠다. (가격: " + price +")");
