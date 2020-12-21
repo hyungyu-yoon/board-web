@@ -36,6 +36,53 @@
 
     <!-- 스프링 설정 파일을 여러 파일로 나누어 처리 하기 위해 기능 별로 나누고 import를 하여 사용한다.  -->
     <!--    <import resource="context-datasource.xml"></import>-->
+
+    <!-- 컬렉션 객체의 주입 List  -->
+<!--    <bean id="collectionBean" class="collection.CollectionBean">-->
+<!--        <property name="addressList">-->
+<!--            <list>-->
+<!--                <value>서울시 강남구 역삼동</value>-->
+<!--                <value>서울시 성동구 행당동</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+    <!-- Set 타입    -->
+<!--    <bean id="collectionBean" class="collection.CollectionBean">-->
+<!--        <property name="addressList">-->
+<!--            <set value-type="java.lang.String">-->
+<!--                <value>서울시 강남구 역삼동</value>-->
+<!--                <value>서울시 성동구 행당동</value>-->
+<!--                <value>서울시 성동구 행당동</value>-->
+<!--            </set>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+    <!-- Map 타입   -->
+<!--    <bean id="collectionBean" class="collection.CollectionBean">-->
+<!--        <property name="addressList">-->
+<!--            <map>-->
+<!--                <entry>-->
+<!--                    <key><value>고길동</value></key>-->
+<!--                    <value>서울시 강남구 역삼동</value>-->
+<!--                </entry>-->
+<!--                <entry>-->
+<!--                    <key><value>마이콜</value></key>-->
+<!--                    <value>서울시 강서구 화곡동</value>-->
+<!--                </entry>-->
+<!--            </map>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+    <!-- Properties 타입   -->
+    <bean id="collectionBean" class="collection.CollectionBean">
+        <property name="addressList">
+            <props>
+                <prop key="고길동">서울시 강남구 역삼동</prop>
+                <prop key="마이콜">서울시 강서구 화곡동</prop>
+            </props>
+        </property>
+    </bean>
 </beans>
 
 <!--
