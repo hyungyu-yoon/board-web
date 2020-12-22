@@ -20,6 +20,7 @@
         <fileset id="fileset" name="ApplicationContext" removed="false">
           <dependency>web application context</dependency>
           <file>file://$MODULE_DIR$/src/main/resources/applicationContext.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/applicationContext.xml</file>
         </fileset>
       </configuration>
     </facet>

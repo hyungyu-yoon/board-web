@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        클래스를 빈으로 등록
+        1. id - bean의 고유한 아이디 값 오직 한 개, 생략 가능
+          * camel case로 작성 규칙을 지키지 않으면 에러 발생
+        2. class - 속성 값은 빈으로 등록 할 클래스의 패키지를 포함한 전체 클래스 경로로 작성, 필수
+        3. name - 복수의 이름으로 등록 가능하다. 설정 파일 내 이름은 유일해야 한다.
+          * 규칙을 따르지 않는 문자열 허용
+        4. init-method - 객체 생성 후 지정된 메서드를 호출. 멤버변수에 대한 초기화 작업
+        5. destroy-method - 객체를 삭제하기 직전에 호출되는 메서드
+        6. lazy-init - 지연 로딩 방식으로 객체 생성 메모리 효율적 관리 true, false
+        7. scope - 객체 생성의 제어 default는 singleton
+        9. <constructor-arg> 엘리먼트 - 생성자 인자로 전달할 객체의 아이디를 ref 속성으로 참조
+          * 다중 변수 매핑 시 여러 개 설정 가능
+          * index 속성 - 어떤 값이 몇 번째 인지 지정
+        10. <property> 엘리먼트 - Setter 인젝션을 사용할 때 정의
+          * name은 set + 변수 이름으로 만들어야 한다. ex) setAddressList -> name="addressList"
+    -->
+<!--    <bean id="tv" class="polymorphism.SamsungTV" init-method="initMethod" destroy-method="destroyMethod" lazy-init="true" scope="singleton">-->
+<!--        <constructor-arg index="0" ref="apple"></constructor-arg>-->
+<!--        <constructor-arg index="1" value="2700000"></constructor-arg>-->
+<!--        <property name="speaker" ref="apple"></property>-->
+<!--        <property name="price" value="2700000"></property>-->
+<!--    </bean>-->
+
+    <!-- p 네임스페이스 사용 xmlns:p="http://www.springframework.org/schema/p" 추가   -->
+<!--    <bean id="tv" class="polymorphism.SamsungTV" p:speaker-ref="sony" p:price="2700000"></bean>-->
+
+<!--    <bean id="sony" class="polymorphism.SonySpeaker"></bean>-->
+<!--    <bean id="apple" class="polymorphism.AppleSpeaker"></bean>-->
+
+    <!-- 스프링 설정 파일을 여러 파일로 나누어 처리 하기 위해 기능 별로 나누고 import를 하여 사용한다.  -->
+    <!--    <import resource="context-datasource.xml"></import>-->
+
+    <!-- 컬렉션 객체의 주입 List  -->
+<!--    <bean id="collectionBean" class="collection.CollectionBean">-->
+<!--        <property name="addressList">-->
+<!--            <list>-->
+<!--                <value>서울시 강남구 역삼동</value>-->
+<!--                <value>서울시 성동구 행당동</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+    <!-- Set 타입    -->
+<!--    <bean id="collectionBean" class="collection.CollectionBean">-->
+<!--        <property name="addressList">-->
+<!--            <set value-type="java.lang.String">-->
+<!--                <value>서울시 강남구 역삼동</value>-->
+<!--                <value>서울시 성동구 행당동</value>-->
+<!--                <value>서울시 성동구 행당동</value>-->
+<!--            </set>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+    <!-- Map 타입   -->
+<!--    <bean id="collectionBean" class="collection.CollectionBean">-->
+<!--        <property name="addressList">-->
+<!--            <map>-->
+<!--                <entry>-->
+<!--                    <key><value>고길동</value></key>-->
+<!--                    <value>서울시 강남구 역삼동</value>-->
+<!--                </entry>-->
+<!--                <entry>-->
+<!--                    <key><value>마이콜</value></key>-->
+<!--                    <value>서울시 강서구 화곡동</value>-->
+<!--                </entry>-->
+<!--            </map>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+    <!-- Properties 타입   -->
+<!--    <bean id="collectionBean" class="collection.CollectionBean">-->
+<!--        <property name="addressList">-->
+<!--            <props>-->
+<!--                <prop key="고길동">서울시 강남구 역삼동</prop>-->
+<!--                <prop key="마이콜">서울시 강서구 화곡동</prop>-->
+<!--            </props>-->
+<!--        </property>-->
+<!--    </bean>-->
+</beans>
+
+<!--
+    스프링 설정 파일 - 스프링 IoC 시작
+    - applicationContext.xml
+    - 자신이 관리 할 클래스들을 등록하는 XML 파일
+    - new File -> XML Configuration File -> Spring Config 로 생성.
+
+    스프링 컨테이너
+    BeanFactory를 상속 받은 ApplicationContext의 구현체
+    1. GenericXmlApplicationContext - 파일 시스템이나 클래스 경로에 있는 XML 설정 파일을 로딩하여 구동하는 컨테이너
+    2. XmlWebApplicationContext - 웹 기반의 스프링 애플리케이션을 개발할 때 사용하는 컨테이너
+-->
