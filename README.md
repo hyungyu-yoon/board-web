@@ -136,5 +136,40 @@ before, after, after-returning, after-throwing 등
 * (Integer, ..) : 한 개 이상의 매개변수, 첫 번째 Integer 를 갖는 메서드 선택
 * (Integer, *) : 두 개 이상의 매개변수, 첫 번째 Integer 를 갖는 메서드 선택
     
-    
+## 어드바이스 동작 시점
+* Before : 비즈니스 메서드 실행 전 동작
+* After Returning : 비즈니스 메서드가 성공적으로 리턴되면 동작
+* After Throwing : 비즈니스 메서드 실행 중 예외가 발생하면 동작
+* After : 비즈니스 메서드 실행된 후, 무조건 실행
+* Around : 메서드 호출 자체를 가로채 비즈니스 메서드 실행 전후에 처리할 로직을 삽입할 수 있음.
+    * ~~~java
+        public Object aroundLog(ProceedingJoinPoint pjp) throws Throwable {
+          System.out.println("[before] 수행 전 처리");
+          Object returnObj = pjp.proceed();
+          System.out.println("[after] 수행 후 처리");
+        }
+      ~~~
+    * ProceedingJoinPoint 객체를 매개변수로 받아야 한다.
 
+## JoinPoint와 바인드 변수
+* 어드바이스 메서드를 의미 있게 구현하려면 클라이언트가 호출한 비즈니스 메서드의 정보가 필요하다.
+* 메서드 이름, 클래스와 패키지 정보 등 정보를 이용할 수 있다.
+
+### JoinPoint 메서드
+* Signature getSignature() : 클라이언트가 호출한 메서드의 시그니처(리턴타입, 이름, 매개변수) 정보를 가진 객체
+* Object getTarget() : 클라이언트가 호출한 비즈니스 메서드를 포함한 비즈니스 객체 리턴
+* Object[] getArgs() : 클라이언트가 메서드를 호출할 때 넘겨준 인자 목록을 Object 배열로 리턴
+* Before, After* 어드바이스는 JoinPoint를 사용하고, Around만 ProceedingJoinPoint를 사용한다.
+
+##### Signature 메서드
+* String getName() : 메서드 이름
+* String toLongString() : 메서드의 리턴타입, 이름, 매개변수를 패키지 경로까지 포함한 리턴
+* String toShortString() : 메서드 시그니처를 축약한 문자열로 리턴
+ 
+~~~ java
+public class LogAdvice {
+    public void printLong(JoinPoint jp) {
+        System.out.println("[공통 로그] 비즈니스 로직 수행 전 동작");
+    }
+}
+~~~
