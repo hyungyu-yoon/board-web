@@ -1,11 +1,17 @@
 package com.springbook.biz.common;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.stereotype.Service;
 
 /**
  * BeforeAdvice 설정
  */
+@Service
+@Aspect
 public class BeforeAdvice {
+    @Before("PointcutCommon.allPointcut()")
     public void beforeLog(JoinPoint jp) {
         String method = jp.getSignature().getName();
         Object[] args = jp.getArgs();

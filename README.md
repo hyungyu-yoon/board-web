@@ -173,3 +173,57 @@ public class LogAdvice {
     }
 }
 ~~~
+
+## 어노테이션 기반 AOP
+xml과 어노테이션 설정을 적절히 혼합하여 사용하면 xml 설정을 최소화하면서 객체들을 효츌적으로 관리할 수 있다.
+
+### 어노테이션 기반 AOP 설정
+#### 어노테이션 사용을 위한 스프링 설정
+~~~xml
+<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+~~~
+* 어드바이스 객체를 bean으로 등록하거나 @Service 어노테이션을 사용하여 검색될 수 있도록 해야 한다.
+
+#### 포인트컷 설정
+* 참조 메서드를 만들고 @Pointcut 어노테이션을 붙인다.
+* 참조 메서드는 메서드 몸체가 비어있는, 구현 로직이 없는 메서드이다. 포인트컷을 식별하는 이름으로만 사용된다.
+    * ~~~java
+      @Pointcut("execution(* com.springbook.biz..*Impl.*(..))") 
+      public void allPointcut() {}
+      ~~~
+
+#### 어드바이스 설정
+* 어드바이스 클래스에는 횡단 관심에 해당하는 어드바이스 메서드가 구현되어 있다.
+* 어드바이스 동작시점은 xml 설정과 마찬가지로 다섯 가지가 제공된다.
+* @Before, @AfterReturning, @AfterThrowing, @After, @Around
+* 해당 어노테이션에 포인트컷 참조 메서드를 지정한다.
+~~~java
+@Before("allPointcut()")
+public void printlog() {
+    System.out.println("[공통 로그] ~~");
+}
+~~~
+
+#### 애스펙트 설정
+* AOP 설정에서 가장 중요한 애스펙트는 @Aspect를 이용하여 설정한다.
+* 애스펙트는 포인트컷과 어드바이스의 결합이다.
+* @Aspect가 설정된 애스펙트 객체에는 반드시 포인트컷과 어드바이스를 결합시키는 설정이 있어야 한다.
+~~~java
+@Service
+@Aspect // Aspect = Pointcut + Advice
+public class LogAdvice {
+    @Pointcut("execution(* com.springbook.biz..*Impl.*(..))")
+    public void allPointcut() {}
+
+    @Before("allPointcut()")
+    public void printLong() {
+        System.out.println("[공통 로그] 비즈니스 로직 수행 전 동작");
+    }
+}
+~~~
+
+### 어드바이스 동작 시점
+* 위의 방법으로 테스트 한다.
+* 공통 포인트컷을 클래스로 분리하여 사용할 수 있다.
+ 
+ 
