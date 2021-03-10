@@ -226,4 +226,105 @@ public class LogAdvice {
 * 위의 방법으로 테스트 한다.
 * 공통 포인트컷을 클래스로 분리하여 사용할 수 있다.
  
- 
+## 스프링 JDBC
+### 스프링 JDBC 개념
+* JDBC는 가장 오랫동안 자바 개발자들이 사용한 DB 연동 기술이다.
+* JDBC를 이용하여 DB연동 프로그램을 개발하면 데이터베이스에 비종속적인 DB 연동 로직을 구현할 수 있다.
+* JDBC 프로그램은 이용하려면 개발자가 작성해야할 코드가 많다.
+* 유틸 클래스로 커넥션 연결 해제 로직을 대체하더라도 많은 양의 코드가 필요하다.
+* 스프링은 JDBC 기반의 DB 연동 프로그램을 쉽게 개발할 수 있도록 JdbcTemplate 클래스를 지원한다.
+
+### JdbcTemplate 클래스
+* JdbcTemplate은 템플릿 메서드 패턴이 적용된 클래스이다.
+* 템플릿 메서드 패턴은 복잡하고 반복되는 알고리즘을 캡슐화해서 재사용하는 패턴으로 정의할 수 있다.
+* 반복되는 DB 연동 로직은 JdbcTemplate 클래스의 템플릿 메서드가 제공하고, 개발자는 달라지는 SQL 구문과 설정값만 신경쓰면 된다.
+
+### 스프링 JDBC 설정
+#### 라이브러리 추가
+
+
+#### DataSource 설정
+~~~xml
+    <!-- DataSource 설정  -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="org.h2.driver"/>
+        <property name="url" value="jdbc:h2:tcp://localhost/~/test"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+    </bean>
+~~~
+
+#### 프로퍼티 파일을 활용한 DataSource 설정
+src/main/resources/confing/
+data.properties
+~~~properties
+jdbc.driver=org.h2.Driver
+jdbc.url=jdbc:h2:tcp://localhost/~/test
+jdbc.username=sa
+jdbc.password=
+~~~
+applicationContext.xml
+~~~xml
+<context:property-placeholder location="classpath:config/database.properties"/>
+    <!-- DataSource 설정  -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+~~~
+
+### JdbcTemplate 메서드
+#### update()메서드
+* SQL의 ? 값을 
+1. int update(String sql, Object... args) 가변변수로 전달
+2. int update(String sql, Object[] args) 배열로 전달
+
+#### queryForInt() 메서드
+* select 구문으로 검색된 정숫값을 리턴 받으려면 queryForInt() 사용
+1. int queryForInt(String sql)
+2. int queryForInt(String sql, Object... args)
+3. int queryForInt(String sql, Object[] args)
+
+#### queryForObject() 메서드
+* select 구문의 실행 결과를 특정 자바 객체로 매핑하여 리턴받을 때 사용
+* 검색 결과를 자바 객체로 매핑할 RowMapper 객체를 반드시 지정해야 한다.
+1. Object queryForObject(String sql)
+2. Object queryForObject(String sql, RowMapper\<T\> rowMapper)
+3. Object queryForObject(String sql Object[] args, RowMapper\<T\> rowMapper)
+
+ex) RowMapper
+~~~java
+public class BoardRowMapper implements RowMapper<BoardVO> {
+    @Override
+    public BoardVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+        BoardVO board = new BoardVO();
+        board.setSeq(rs.getInt("SEQ"));
+        // ...
+        return board;
+    }
+}
+~~~ 
+
+#### query() 메서드
+* query 메서드는 select 문의 실행 결과가 리스트일 때 사용한다.
+1. List query(String sql)
+2. List query(String sql, RowMapper\<T\> rowMapper)
+3. List query(String sql Object[] args, RowMapper\<T\> rowMapper)
+* 여러건의 ROW 정보가 검색되고, 검색된 ROW 수많큼 mapRow 메서드가 실행되어 List로 저장되어 리턴한다.
+
+### DAO 클래스 구현
+1. 첫 번째 방법: JdbcDaoSupport 클래스 상속
+    * DAO 클래스에 JdbcDaoSupport를 상속받는다.
+    * 부모의 getJdbcTemplate() 메서드를 사용할 수 있다.
+    * getJdbcTemplate 메서드가 JdbcTemplate 객체를 리턴하려면 DataSource 객체가 필요하다.
+    * 부모의 setDataSource에 데이터소스 객체를 의존성 주입하면 된다.
+    ~~~java
+       @Autowired
+       public void setSuperDataSource(DataSource dataSource) {
+           super.setDataSource(dataSource);
+       }
+    ~~~
+2. 두 번째 방법: JdbcTemplate 클래스 \<bean\> 등록, 의존성 주입
+* 일반적으로 이 방법을 사용한다.
