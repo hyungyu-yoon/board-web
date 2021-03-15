@@ -328,3 +328,71 @@ public class BoardRowMapper implements RowMapper<BoardVO> {
     ~~~
 2. 두 번째 방법: JdbcTemplate 클래스 \<bean\> 등록, 의존성 주입
 * 일반적으로 이 방법을 사용한다.
+
+
+## 트랜잭션 처리
+* 스프링에서 트랜잭션 처리를 컨테이너가 자동으로 처리할 수 있도록 설정할 수 있다.
+* 선언적 트랜잭션 처리라고 한다.
+* 트랜잭션은 어드바이저 엘리먼트를 사용해야 한다.
+
+### 트랜잭션 네임스페이스 등
+* applicationContext.xml에 tx 네임스페이스 등록
+
+### 트랜잭션 관리자 등록
+* 트랜잭션 관련 설정에서 가장 먼저 등록하는 것은 트랜잭션 관리자 클래스이다.
+* 스프링은 다양한 트랜잭션 관리자를 지원하고, 어떤 기술을 이용하여 데이터베이스 연동을 처리했느냐에 따라서 트랜잭션 관리자가 달라진다.
+* 모든 트랜잭션 관리자는 PlatformTransactionManager 인터페이스를 구현한 클래스들이다.
+* 트랜잭션 관리자를 이용하여 트랜잭션을 제어하는 어드바이스를 등록한다.
+
+### 트랜잭션 어드바이스 설정
+* \<tx:advice\> 엘리먼트로 어드바이스를 설정한다.
+* AOP 관련 설정에 사용한 모든 어드바이스 클래스를 우리가 직접 구현했지만, 트랜잭션 관리 기능의 어드바이스는 직접 구현하지 않는다.
+* 스프링 컨테이너가 \<tx:advice\> 설정을 참조하여 자동으로 생성한다.
+##### tx:method 엘리먼트가 가질 수 있는 속성
+* name: 트랜잭션이 적용될 메소드 이름 지정
+* read-only: 읽기 전용 여부 지정 (default:false)
+* no-rollback-for: 트랜잭션을 롤백하지 않을 예외 지정
+* rollback-for: 트랜잭션을 롤백할 예외 지정
+
+### AOP 설정을 통한 트랜잭션 적용
+* 트랜잭션 관리 어드바이스가 동작하도록 AOP 설정만 추가하면 된다.
+* 이때 \<aop:advisor\> 를 사용해야 한다.
+* 트랜잭션 관리 어드바이스는 직접 클래스 구현을 하지 않고, 스프링 컨테이너가 자동으로 설정하여 이름을 알 수 없다.
+* 결국 aop:aspect 엘리먼트를 사용할 수 없다.
+
+##### ex) 트랜잭션 설정
+ ~~~xml
+<!-- DataSource 설정  -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- Transaction 설정 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 트랜잭션 어드바이스 설정 -->
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+    
+    <!-- 어드바이스 설정-->
+    <aop:config>
+        <aop:pointcut id="txPointcut" expression="execution(* com.springbook.biz..*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+    </aop:config>
+~~~
+
+### 트랜잭션 설정 테스트
+* 트랜잭션은 메서드 단위로 관리되므로 예외가 발생하면 메서드의 작업결과는 모두 롤백처리 된다.
