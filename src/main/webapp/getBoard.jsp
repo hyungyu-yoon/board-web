@@ -5,17 +5,11 @@
   Time: 12:20 오전
   To change this template use File | Settings | File Templates.
 --%>
-<%@page import="java.util.List" %>
-<%@page import="com.springbook.biz.board.impl.BoardDAO" %>
 <%@page import="com.springbook.biz.board.BoardVO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    String seq = request.getParameter("seq");
-    BoardVO vo = new BoardVO();
-    vo.setSeq(Integer.parseInt(seq));
-    BoardDAO dao = new BoardDAO();
-    BoardVO board = dao.getBoard(vo);
+    BoardVO board = (BoardVO) session.getAttribute("board");
 %>
 <!DOCTYPE html>
 <html>
@@ -26,9 +20,9 @@
 <body>
     <center>
         <h1>글 상세</h1>
-        <a href="logout_proc.jsp">Log-out</a>
+        <a href="logout.do">Log-out</a>
         <hr>
-        <form action="updateBoard_proc.jsp" method="post">
+        <form action="updateBoard.do" method="post">
             <input name="seq" type="hidden" value="<%=board.getSeq()%>">
             <table border="1" cellspacing="0" cellpadding="0">
                 <tr>
@@ -62,7 +56,7 @@
         </form>
         <hr>
         <a href="insertBoard.jsp">글등록</a>&nbsp;&nbsp;&nbsp;
-        <a href="deleteBoard_proc.jsp?seq=<%=board.getSeq()%>">글삭제</a>&nbsp;&nbsp;&nbsp;
+        <a href="deleteBoard.do?seq=<%=board.getSeq()%>">글삭제</a>&nbsp;&nbsp;&nbsp;
         <a href="getBoardList.jsp">글목록</a>
     </center>
 </body>

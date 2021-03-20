@@ -6,15 +6,13 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@page import="java.util.List" %>
-<%@page import="com.springbook.biz.board.impl.BoardDAO" %>
 <%@page import="com.springbook.biz.board.BoardVO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    BoardVO vo = new BoardVO();
-    BoardDAO dao = new BoardDAO();
-    List<BoardVO> boardList = dao.getBoardList(vo);
+    List<BoardVO> boardList = (List) session.getAttribute("boardList");
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +22,7 @@
 <body>
     <center>
         <h1>글 목록</h1>
-        <h3>테스트님 환영합니다...<a href="logout_proc.jsp">Log-out</a></h3>
+        <h3>테스트님 환영합니다...<a href="logout.do">Log-out</a></h3>
 
         <form action="getBoardList.jsp" method="post">
             <table border="1" cellspacing="0" cellpadding="0" width="700">
@@ -53,7 +51,7 @@
         <% for(BoardVO board : boardList) { %>
             <tr>
                 <td><%= board.getSeq()%></td>
-                <td align="left"><a href="getBoard.jsp?seq=<%=board.getSeq()%>"> <%= board.getTitle() %></a></td>
+                <td align="left"><a href="getBoard.do?seq=<%=board.getSeq()%>"> <%= board.getTitle() %></a></td>
                 <td><%= board.getWriter()%></td>
                 <td><%= board.getRegDate()%></td>
                 <td><%= board.getCnt()%></td>
