@@ -2,14 +2,15 @@ package com.springbook.view.board;
 
 import com.springbook.biz.board.BoardVO;
 import com.springbook.biz.board.impl.BoardDAO;
-import com.springbook.view.controller.Controller;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class UpdateBoardController implements Controller {
     @Override
-    public String handleRequest(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("글 수정 처리");
 
         // 1. 사용자 입력 정보 추출
@@ -27,6 +28,8 @@ public class UpdateBoardController implements Controller {
         BoardDAO boardDAO = new BoardDAO();
         boardDAO.updateBoard(vo);
 
-        return "getBoardList.do";
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:getBoardList.do");
+        return modelAndView;
     }
 }

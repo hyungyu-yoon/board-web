@@ -396,3 +396,33 @@ public class BoardRowMapper implements RowMapper<BoardVO> {
 
 ### 트랜잭션 설정 테스트
 * 트랜잭션은 메서드 단위로 관리되므로 예외가 발생하면 메서드의 작업결과는 모두 롤백처리 된다.
+
+## Spring MVC 구조
+### Spring MVC 수행 흐름
+Client request 요청
+1. DispatcherServlet - 클라이언트로부터의 모든 요청을 받는다.
+2. HandlerMapping - 요청을 처리할 Controller를 검색한다.
+3. Controller - 검색된 Controller를 실행하여 클라이언트의 요청을 처리한다.
+4. ModelAndView - 비즈니스 로직 수행 결과로 얻어낸 Model 정보와 보여줄 View 정보를 ModelAndView 객체에 저장하여 리턴
+5. ViewResolver - DispatcherServlet은 ModelAndView로부터 View 정보를 추출하고, ViewResolver를 이용하여 응답으로 사용할 View를 얻어낸다.
+6. View - DispatcherServlet은 ViewResolver로 찾아낸 View를 실행하여 응답을 전송한다.
+
+### DispatcherServlet 등록 및 스프링 컨테이너 구동
+#### DispatcherServlet 등록
+* WEB-INF/web.xml에 Spring에서 제공하는 DispatcherServlet으로 변경
+
+#### 스프링 컨테이너 구동
+* 서블릿 컨테이너가 DispatcherServlet 객체를 생성하고 나면 재정의된 init() 메서드가 자동으로 실행된다.
+* init() 메서드는 스프링 설정 파일(action-servlet.xml)을 로딩하여 XmlWebApplicationContext를 생성한다.
+* 스프링 설정 파일에 DispatcherServlet이 사용할 HandlerMapping, Controller, ViewResolver 클래스를 bean으로 등록하면 스프링 컨테이너가 해당 객체들을 생성해준다.
+
+#### 스프링 설정 파일 등록
+* WEB-INF/action-servlet.xml 파일을 찾아 로딩을 하므로 해당 위치에 파일을 생성한다.
+* 파일 이름은 web.xml에서 등록된 서블릿 이름 뒤에 -servlet.xml을 붙여 스프링 설정 파일을 찾는다.
+
+### 스프링 설정 파일 변경
+* 스프링 컨테이너를 위한 설정 파일의 이름과 위치는 서블릿 이름을 기준으로 자동으로 결정된다.
+* 하지만 필요에 따라 설정 파일의 이름을 바꾸거나 위치를 변경할 수 있다.
+
+### 인코딩 설정
+* 스프링에서는 인코딩 처리를 위해 CharacterEncodingFilter 클래스를 제공하며 web.xml 파일에 CharacterEncodingFilter를 등록하면 모든 클라이언트의 요청에 대해서 일괄적으로 인코딩을 처리할 수 있다. 
