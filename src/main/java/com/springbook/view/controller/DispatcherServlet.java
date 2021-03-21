@@ -15,6 +15,16 @@ import java.util.List;
 
 public class DispatcherServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private HandlerMapping handlerMapping;
+    private ViewResolver viewResolver;
+
+    @Override
+    public void init() throws ServletException {
+        handlerMapping = new HandlerMapping();
+        viewResolver = new ViewResolver();
+        viewResolver.setPrefix("./");
+        viewResolver.setSuffix(".jsp");
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
@@ -30,30 +40,18 @@ public class DispatcherServlet extends HttpServlet {
         // 1. 클라이언트의 요청 path 정보를 추출한다.
         String uri = request.getRequestURI();
         String path = uri.substring(uri.lastIndexOf("/"));
-        System.out.println(path);
 
-        if(path.equals("/login.do")) {
-            System.out.println("로그인 처리");
-            this.login(request, response);
-        }else if(path.equals("/logout.do")) {
-            System.out.println("로그아웃 처리");
-            this.logout(request, response);
-        }else if(path.equals("/insertBoard.do")) {
-            System.out.println("글 등록 처리");
-            this.insertBoard(request, response);
-        }else if(path.equals("/updateBoard.do")) {
-            System.out.println("글 수정 처리");
-            this.updateBoard(request, response);
-        }else if(path.equals("/deleteBoard.do")) {
-            System.out.println("글 삭제 처리");
-            this.deleteBoard(request, response);
-        }else if(path.equals("/getBoard.do")) {
-            System.out.println("글 상세 조회 처리");
-            this.getBoard(request, response);
-        }else if(path.equals("/getBoardList.do")) {
-            System.out.println("글 목록 검색 처리");
-            this.getBoardList(request, response);
+        Controller ctrl = handlerMapping.getController(path);
+
+        String viewName = ctrl.handleRequest(request, response);
+
+        String view = null;
+        if(!viewName.contains(".do")) {
+            view = viewResolver.getView(viewName);
+        } else {
+            view = viewName;
         }
+        response.sendRedirect(view);
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
