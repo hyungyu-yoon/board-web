@@ -1,21 +1,18 @@
 package com.springbook.view.user;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class LogoutController implements Controller {
-    @Override
-    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("로그아웃 처리");
-        HttpSession session = request.getSession();
-        session.invalidate();
+@Controller
+public class LogoutController {
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:login.jsp");
-        return modelAndView;
+    @RequestMapping("/logout.do")
+    public String handleRequest(HttpSession httpSession) {
+        System.out.println("로그아웃 처리");
+        httpSession.invalidate();
+
+        return "login.jsp";
     }
 }
