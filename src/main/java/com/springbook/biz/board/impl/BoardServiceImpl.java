@@ -10,7 +10,7 @@ import java.util.List;
 @Service("boardService")
 public class BoardServiceImpl implements BoardService {
     @Autowired
-    private BoardDAOSpring boardDAO;
+    private BoardDAOMybatis boardDAO;
 
     @Override
     public void insertBoard(BoardVO vo) {

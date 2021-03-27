@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="config/database.properties"/>
+
+    <typeAliases>
+        <typeAlias alias="BoardDAOMybatis" type="com.springbook.biz.board.impl.BoardDAOMybatis"/>
+        <typeAlias alias="board" type="com.springbook.biz.board.BoardVO"/>
+    </typeAliases>
+
+    <mappers>
+        <mapper resource="mappers/board-mapper.xml"/>
+    </mappers>
+</configuration>
